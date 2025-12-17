@@ -1,0 +1,72 @@
+package com.ibeybeh.buildLogic
+
+import com.android.build.gradle.LibraryExtension
+import com.ibeybeh.buildLogic.BundleNames.ANDROID_TEST_IMPLEMENTATION
+import com.ibeybeh.buildLogic.BundleNames.FEATURE_IMPLEMENTATION
+import com.ibeybeh.buildLogic.BundleNames.LIBS
+import com.ibeybeh.buildLogic.BundleNames.PROJECT_APPLICATION_ID
+import org.gradle.api.Plugin
+import org.gradle.api.Project
+import org.gradle.api.artifacts.VersionCatalogsExtension
+import org.gradle.kotlin.dsl.configure
+import org.gradle.kotlin.dsl.dependencies
+import org.gradle.kotlin.dsl.getByType
+
+class BeylearnFeatureConventionPlugin : Plugin<Project> {
+    override fun apply(target: Project) {
+        with(target) {
+            val libs = extensions.getByType<VersionCatalogsExtension>().named(LIBS)
+
+            val baseNamespace = libs.findVersion(PROJECT_APPLICATION_ID).get().toString()
+
+            with(pluginManager) {
+                apply("com.android.library")
+                apply("org.jetbrains.kotlin.android")
+                apply("com.google.devtools.ksp")
+                apply("org.jetbrains.kotlin.plugin.compose")
+            }
+
+            extensions.configure<LibraryExtension> {
+                val moduleSuffix = path.removePrefix(":")
+                    .replace("-", ".")
+                    .replace(":", ".")
+
+                namespace = "$baseNamespace.$moduleSuffix"
+
+                compileSdk = 36
+                defaultConfig {
+                    minSdk = 24
+                    testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+                    consumerProguardFiles("consumer-rules.pro")
+                }
+                buildFeatures {
+                    compose = true
+                }
+
+                buildTypes {
+                    release {
+                        isMinifyEnabled = false
+                        proguardFiles(
+                            getDefaultProguardFile("proguard-android-optimize.txt"),
+                            "proguard-rules.pro"
+                        )
+                    }
+                }
+
+                compileOptions {
+                    sourceCompatibility = org.gradle.api.JavaVersion.VERSION_17
+                    targetCompatibility = org.gradle.api.JavaVersion.VERSION_17
+                }
+            }
+
+            dependencies {
+                libs.findBundle(FEATURE_IMPLEMENTATION).ifPresent {
+                    "implementation"(it)
+                }
+                libs.findBundle(ANDROID_TEST_IMPLEMENTATION).ifPresent {
+                    "implementation"(it)
+                }
+            }
+        }
+    }
+}

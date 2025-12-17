@@ -7,6 +7,7 @@ pluginManagement {
                 includeGroupByRegex("androidx.*")
             }
         }
+        includeBuild("build-logic")
         mavenCentral()
         gradlePluginPortal()
     }
@@ -21,4 +22,7 @@ dependencyResolutionManagement {
 
 rootProject.name = "BeyLearn"
 include(":app")
- 
+include(":api-test")
+include(":core-ui")
+include(":core-entity")
+include(":feature-test")

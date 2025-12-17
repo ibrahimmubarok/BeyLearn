@@ -1,6 +1,6 @@
 [versions]
 agp = "8.9.3"
-kotlin = "2.0.21"
+kotlin = "2.1.10"
 coreKtx = "1.17.0"
 junit = "4.13.2"
 jUnitKtx = "1.3.0"
@@ -17,6 +17,10 @@ retrofit = "2.11.0"
 retrofitGson = "2.11.0"
 okhttp = "4.12.0"
 gson = "2.11.0"
+ksp = "2.1.10-1.0.31"
+projectApplicationId = "com.ibeybeh.beylearn"
+material = "1.13.0"
+uiAndroid = "1.10.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -42,6 +46,13 @@ retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = 
 retrofitGson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofitGson" }
 okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
 gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
+
+## Dependencies for build-convention
+android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
+kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
+ksp-gradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+androidx-ui-android = { group = "androidx.compose.ui", name = "ui-android", version.ref = "uiAndroid" }
 
 [bundles]
 android-test-implementation = ["androidx-junit", "androidx-espresso-core"]
@@ -73,6 +84,15 @@ feature-implementation = [
     "androidx-lifecycle-runtime-ktx",
     "android-lifecycle-runtime-compose",
     "timber",
+    "androidx-compose-bom",
+    "androidx-ui",
+    "androidx-ui-graphics",
+    "androidx-ui-tooling",
+    "androidx-ui-tooling-preview",
+    "androidx-ui-test-manifest",
+    "androidx-ui-test-junit4",
+    "androidx-material3",
+    "androidx-ui-android"
 ]
 
 
@@ -80,4 +100,8 @@ feature-implementation = [
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+beylearn-android-api = { id = "beylearn.android.api" }
+beylearn-android-core = { id = "beylearn.android.core" }
+beylearn-android-feature = { id = "beylearn.android.feature" }
+android-library = { id = "com.android.library", version.ref = "agp" }
 
