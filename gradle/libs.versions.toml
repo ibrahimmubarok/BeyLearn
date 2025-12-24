@@ -9,6 +9,8 @@ espressoCore = "3.7.0"
 lifecycleRuntimeKtx = "2.10.0"
 activityCompose = "1.12.1"
 composeBom = "2025.12.00"
+hilt = "2.53.1"
+hiltNavigationCompose = "1.2.0"
 timber = "5.0.1"
 appCompat = "1.7.1"
 kotlinx-serialization = "1.8.0"
@@ -53,6 +55,10 @@ kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-pl
 ksp-gradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-ui-android = { group = "androidx.compose.ui", name = "ui-android", version.ref = "uiAndroid" }
+hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
+hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
+androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
+hilt-gradlePlugin = { group = "com.google.dagger", name = "hilt-android-gradle-plugin", version.ref = "hilt" }
 
 [bundles]
 android-test-implementation = ["androidx-junit", "androidx-espresso-core"]
@@ -100,8 +106,11 @@ feature-implementation = [
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+android-library = { id = "com.android.library", version.ref = "agp" }
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+kspPlugin = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 beylearn-android-api = { id = "beylearn.android.api" }
 beylearn-android-core = { id = "beylearn.android.core" }
 beylearn-android-feature = { id = "beylearn.android.feature" }
-android-library = { id = "com.android.library", version.ref = "agp" }
+beylearn-hilt = { id = "beylearn.hilt" }
 

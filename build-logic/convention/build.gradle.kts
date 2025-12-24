@@ -9,6 +9,7 @@ dependencies {
     compileOnly(libs.kotlin.gradlePlugin)
 
     implementation(libs.ksp.gradlePlugin)
+    implementation(libs.hilt.gradlePlugin)
 }
 
 gradlePlugin {
@@ -24,6 +25,10 @@ gradlePlugin {
         register("androidFeature") {
             id = "beylearn.android.feature"
             implementationClass = "com.ibeybeh.buildLogic.BeylearnFeatureConventionPlugin"
+        }
+        register("hildConvention") {
+            id = "beylearn.hilt"
+            implementationClass = "com.ibeybeh.buildLogic.BeylearnHiltConventionPlugin"
         }
     }
 }

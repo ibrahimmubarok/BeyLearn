@@ -1,9 +1,12 @@
 package com.ibeybeh.beylearn.api_test.data
 
+import com.ibeybeh.beylearn.api_test.model.ProfileTestResponseResponse
+import com.ibeybeh.beylearn.core.remote.entity.BaseResponse
+import retrofit2.Response
 import retrofit2.http.GET
 
 interface TestApi {
 
     @GET("profile")
-    suspend fun getProfile()
+    suspend fun getProfile(): Response<BaseResponse<ProfileTestResponseResponse>>
 }

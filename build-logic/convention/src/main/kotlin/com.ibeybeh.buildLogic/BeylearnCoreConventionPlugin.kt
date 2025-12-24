@@ -1,10 +1,10 @@
 package com.ibeybeh.buildLogic
 
 import com.android.build.gradle.LibraryExtension
-import com.ibeybeh.buildLogic.BundleNames.CORE_IMPLEMENTATION
-import com.ibeybeh.buildLogic.BundleNames.LIBS
-import com.ibeybeh.buildLogic.BundleNames.PROJECT_APPLICATION_ID
-import com.ibeybeh.buildLogic.BundleNames.TEST_IMPLEMENTATION
+import com.ibeybeh.buildLogic.utils.BundleNames.CORE_IMPLEMENTATION
+import com.ibeybeh.buildLogic.utils.BundleNames.LIBS
+import com.ibeybeh.buildLogic.utils.BundleNames.PROJECT_APPLICATION_ID
+import com.ibeybeh.buildLogic.utils.BundleNames.TEST_IMPLEMENTATION
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.VersionCatalogsExtension
@@ -23,6 +23,7 @@ class BeylearnCoreConventionPlugin : Plugin<Project> {
                 apply("com.android.library")
                 apply("org.jetbrains.kotlin.android")
                 apply("com.google.devtools.ksp")
+                apply("beylearn.hilt")
             }
 
             extensions.configure<LibraryExtension> {

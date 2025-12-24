@@ -1,10 +1,10 @@
 package com.ibeybeh.buildLogic
 
 import com.android.build.gradle.LibraryExtension
-import com.ibeybeh.buildLogic.BundleNames.ANDROID_TEST_IMPLEMENTATION
-import com.ibeybeh.buildLogic.BundleNames.FEATURE_IMPLEMENTATION
-import com.ibeybeh.buildLogic.BundleNames.LIBS
-import com.ibeybeh.buildLogic.BundleNames.PROJECT_APPLICATION_ID
+import com.ibeybeh.buildLogic.utils.BundleNames.ANDROID_TEST_IMPLEMENTATION
+import com.ibeybeh.buildLogic.utils.BundleNames.FEATURE_IMPLEMENTATION
+import com.ibeybeh.buildLogic.utils.BundleNames.LIBS
+import com.ibeybeh.buildLogic.utils.BundleNames.PROJECT_APPLICATION_ID
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.VersionCatalogsExtension
