@@ -1,10 +1,10 @@
-package com.ibeybeh.buildLogic
+package com.ibeybeh.buildlogic
 
 import com.android.build.gradle.LibraryExtension
-import com.ibeybeh.buildLogic.utils.BundleNames.CORE_IMPLEMENTATION
-import com.ibeybeh.buildLogic.utils.BundleNames.LIBS
-import com.ibeybeh.buildLogic.utils.BundleNames.PROJECT_APPLICATION_ID
-import com.ibeybeh.buildLogic.utils.BundleNames.TEST_IMPLEMENTATION
+import com.ibeybeh.buildlogic.utils.BundleNames.CORE_IMPLEMENTATION
+import com.ibeybeh.buildlogic.utils.BundleNames.LIBS
+import com.ibeybeh.buildlogic.utils.BundleNames.PROJECT_APPLICATION_ID
+import com.ibeybeh.buildlogic.utils.BundleNames.TEST_IMPLEMENTATION
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.VersionCatalogsExtension
@@ -16,6 +16,7 @@ class BeylearnCoreConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
             val libs = extensions.getByType<VersionCatalogsExtension>().named(LIBS)
+            var moduleSuffix = ""
 
             val baseNamespace = libs.findVersion(PROJECT_APPLICATION_ID).get().toString()
 
@@ -27,7 +28,7 @@ class BeylearnCoreConventionPlugin : Plugin<Project> {
             }
 
             extensions.configure<LibraryExtension> {
-                val moduleSuffix = path.removePrefix(":")
+                moduleSuffix = path.removePrefix(":")
                     .replace("-", ".")
                     .replace(":", ".")
 
@@ -65,6 +66,27 @@ class BeylearnCoreConventionPlugin : Plugin<Project> {
                 }
                 libs.findBundle(TEST_IMPLEMENTATION).ifPresent {
                     "implementation"(it)
+                }
+
+                if (moduleSuffix == "core.ui") {
+                    add("implementation", project(":core-entity"))
+
+                    val bom = libs.findLibrary("androidx-compose-bom").get()
+
+                    // BOM Platform
+                    add("implementation", platform(bom))
+                    add("androidTestImplementation", platform(bom))
+
+                    // Core Dependencies
+                    add("implementation", libs.findLibrary("androidx-ui").get())
+                    add("implementation", libs.findLibrary("androidx-ui-graphics").get())
+                    add("implementation", libs.findLibrary("androidx-ui-tooling-preview").get())
+                    add("implementation", libs.findLibrary("androidx-material3").get())
+
+                    // Debug & Testing
+                    add("debugImplementation", libs.findLibrary("androidx-ui-tooling").get())
+                    add("debugImplementation", libs.findLibrary("androidx-ui-test-junit4").get())
+                    add("debugImplementation", libs.findLibrary("androidx-ui-test-manifest").get())
                 }
             }
         }

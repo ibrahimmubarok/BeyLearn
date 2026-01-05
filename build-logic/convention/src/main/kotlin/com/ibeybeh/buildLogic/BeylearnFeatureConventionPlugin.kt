@@ -1,10 +1,10 @@
-package com.ibeybeh.buildLogic
+package com.ibeybeh.buildlogic
 
 import com.android.build.gradle.LibraryExtension
-import com.ibeybeh.buildLogic.utils.BundleNames.ANDROID_TEST_IMPLEMENTATION
-import com.ibeybeh.buildLogic.utils.BundleNames.FEATURE_IMPLEMENTATION
-import com.ibeybeh.buildLogic.utils.BundleNames.LIBS
-import com.ibeybeh.buildLogic.utils.BundleNames.PROJECT_APPLICATION_ID
+import com.ibeybeh.buildlogic.utils.BundleNames.ANDROID_TEST_IMPLEMENTATION
+import com.ibeybeh.buildlogic.utils.BundleNames.FEATURE_IMPLEMENTATION
+import com.ibeybeh.buildlogic.utils.BundleNames.LIBS
+import com.ibeybeh.buildlogic.utils.BundleNames.PROJECT_APPLICATION_ID
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.VersionCatalogsExtension
@@ -66,6 +66,9 @@ class BeylearnFeatureConventionPlugin : Plugin<Project> {
                 libs.findBundle(ANDROID_TEST_IMPLEMENTATION).ifPresent {
                     "implementation"(it)
                 }
+                add("implementation", project(":core"))
+                add("implementation", project(":core-entity"))
+                add("implementation", project(":core-ui"))
             }
         }
     }

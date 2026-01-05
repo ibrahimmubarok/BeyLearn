@@ -1,10 +1,10 @@
-package com.ibeybeh.buildLogic
+package com.ibeybeh.buildlogic
 
 import com.android.build.gradle.LibraryExtension
-import com.ibeybeh.buildLogic.utils.BundleNames.API_IMPLEMENTATION
-import com.ibeybeh.buildLogic.utils.BundleNames.LIBS
-import com.ibeybeh.buildLogic.utils.BundleNames.PROJECT_APPLICATION_ID
-import com.ibeybeh.buildLogic.utils.BundleNames.TEST_IMPLEMENTATION
+import com.ibeybeh.buildlogic.utils.BundleNames.API_IMPLEMENTATION
+import com.ibeybeh.buildlogic.utils.BundleNames.LIBS
+import com.ibeybeh.buildlogic.utils.BundleNames.PROJECT_APPLICATION_ID
+import com.ibeybeh.buildlogic.utils.BundleNames.TEST_IMPLEMENTATION
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.VersionCatalogsExtension
@@ -63,6 +63,8 @@ class BeylearnApiConventionPlugin : Plugin<Project> {
                 libs.findBundle(TEST_IMPLEMENTATION).ifPresent {
                     "implementation"(it)
                 }
+                add("implementation", project(":core"))
+                add("implementation", project(":core-entity"))
             }
         }
     }

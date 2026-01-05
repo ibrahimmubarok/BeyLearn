@@ -1,4 +1,4 @@
-package com.ibeybeh.buildLogic
+package com.ibeybeh.buildlogic
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project

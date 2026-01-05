@@ -1,4 +1,4 @@
-package com.ibeybeh.buildLogic.utils
+package com.ibeybeh.buildlogic.utils
 
 object BundleNames {
     const val API_IMPLEMENTATION = "api-implementation"
