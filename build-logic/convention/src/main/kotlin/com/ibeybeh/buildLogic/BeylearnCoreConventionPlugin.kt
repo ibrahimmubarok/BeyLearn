@@ -41,9 +41,7 @@ class BeylearnCoreConventionPlugin : Plugin<Project> {
                     consumerProguardFiles("consumer-rules.pro")
                 }
                 buildFeatures {
-                    buildFeatures {
-                        buildConfig = true
-                    }
+                    buildConfig = true
                     compose = moduleSuffix == "core-ui"
                 }
 

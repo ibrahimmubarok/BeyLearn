@@ -18,7 +18,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ibeybeh.beylearn.feature_test.contract.ProfileEffect
 import com.ibeybeh.beylearn.feature_test.contract.ProfileEvent
 import com.ibeybeh.beylearn.feature_test.viewmodel.ProfileTestViewModel
-import timber.log.Timber
 
 @Composable
 fun TestScreen(viewModel: ProfileTestViewModel = hiltViewModel()) {
