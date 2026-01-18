@@ -35,7 +35,7 @@ class BeylearnApiConventionPlugin : Plugin<Project> {
 
                 compileSdk = 36
                 defaultConfig {
-                    minSdk = 24
+                    minSdk = 26
                     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
                     consumerProguardFiles("consumer-rules.pro")
                 }
@@ -51,8 +51,8 @@ class BeylearnApiConventionPlugin : Plugin<Project> {
                 }
 
                 compileOptions {
-                    sourceCompatibility = org.gradle.api.JavaVersion.VERSION_17
-                    targetCompatibility = org.gradle.api.JavaVersion.VERSION_17
+                    sourceCompatibility = org.gradle.api.JavaVersion.VERSION_21
+                    targetCompatibility = org.gradle.api.JavaVersion.VERSION_21
                 }
             }
 

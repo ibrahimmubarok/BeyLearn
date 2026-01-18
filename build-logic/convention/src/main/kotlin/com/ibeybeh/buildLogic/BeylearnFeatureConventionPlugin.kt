@@ -24,6 +24,7 @@ class BeylearnFeatureConventionPlugin : Plugin<Project> {
                 apply("org.jetbrains.kotlin.android")
                 apply("com.google.devtools.ksp")
                 apply("org.jetbrains.kotlin.plugin.compose")
+                apply("beylearn.hilt")
             }
 
             extensions.configure<LibraryExtension> {
@@ -35,7 +36,7 @@ class BeylearnFeatureConventionPlugin : Plugin<Project> {
 
                 compileSdk = 36
                 defaultConfig {
-                    minSdk = 24
+                    minSdk = 26
                     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
                     consumerProguardFiles("consumer-rules.pro")
                 }
@@ -54,8 +55,8 @@ class BeylearnFeatureConventionPlugin : Plugin<Project> {
                 }
 
                 compileOptions {
-                    sourceCompatibility = org.gradle.api.JavaVersion.VERSION_17
-                    targetCompatibility = org.gradle.api.JavaVersion.VERSION_17
+                    sourceCompatibility = org.gradle.api.JavaVersion.VERSION_21
+                    targetCompatibility = org.gradle.api.JavaVersion.VERSION_21
                 }
             }
 

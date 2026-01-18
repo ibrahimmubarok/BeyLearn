@@ -1,10 +1,10 @@
 package com.ibeybeh.beylearn.core_entity
 
 data class Profile(
-    val id: String,
+    val id: Int,
     val name: String,
     val email: String,
-    val age: String,
+    val age: Int,
     val city: String,
     val country: String
 )

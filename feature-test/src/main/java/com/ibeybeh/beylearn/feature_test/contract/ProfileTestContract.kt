@@ -1,0 +1,23 @@
+package com.ibeybeh.beylearn.feature_test.contract
+
+import com.ibeybeh.beylearn.core.util.UiEffect
+import com.ibeybeh.beylearn.core.util.UiEvent
+import com.ibeybeh.beylearn.core.util.UiState
+import com.ibeybeh.beylearn.core_entity.Profile
+
+data class ProfileState(
+    val isLoading: Boolean = false,
+    val profile: Profile? = null,
+    val errorMessage: String? = null
+) : UiState
+
+sealed class ProfileEvent : UiEvent {
+    object LoadProfile : ProfileEvent()
+    data class RefreshProfile(val forceUpdate: Boolean) : ProfileEvent()
+    object NavigateToLogin : ProfileEvent()
+}
+
+sealed class ProfileEffect : UiEffect {
+    data class ShowToast(val message: String) : ProfileEffect()
+    object NavigateToLogin : ProfileEffect()
+}

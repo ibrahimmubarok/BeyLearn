@@ -1,6 +1,9 @@
 package com.ibeybeh.beylearn.api_test.di
 
-import com.ibeybeh.beylearn.api_test.data.TestApi
+import com.ibeybeh.beylearn.api_test.data.remote.datasource.TestRemoteDataSource
+import com.ibeybeh.beylearn.api_test.data.remote.service.TestApi
+import com.ibeybeh.beylearn.api_test.data.repository.TestRepository
+import com.ibeybeh.beylearn.api_test.data.repository.TestRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,4 +18,10 @@ class TestModule {
     @Provides
     @Singleton
     internal fun provideTestApi(retrofit: Retrofit): TestApi = retrofit.create(TestApi::class.java)
+
+    @Provides
+    @Singleton
+    internal fun provideTestRepository(
+        remoteDataSource: TestRemoteDataSource
+    ): TestRepository = TestRepositoryImpl(remoteDataSource)
 }

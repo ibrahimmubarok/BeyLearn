@@ -3,7 +3,6 @@ plugins {
 }
 
 dependencies {
-    implementation(libs.retrofit)
-    implementation(libs.okhttp)
-    implementation(libs.retrofitGson)
+    debugImplementation(libs.chucker)
+    releaseImplementation(libs.chucker)
 }

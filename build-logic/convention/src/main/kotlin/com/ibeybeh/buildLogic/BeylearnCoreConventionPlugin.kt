@@ -1,7 +1,6 @@
 package com.ibeybeh.buildlogic
 
 import com.android.build.gradle.LibraryExtension
-import com.ibeybeh.buildlogic.utils.BundleNames.CORE_IMPLEMENTATION
 import com.ibeybeh.buildlogic.utils.BundleNames.LIBS
 import com.ibeybeh.buildlogic.utils.BundleNames.PROJECT_APPLICATION_ID
 import com.ibeybeh.buildlogic.utils.BundleNames.TEST_IMPLEMENTATION
@@ -24,6 +23,7 @@ class BeylearnCoreConventionPlugin : Plugin<Project> {
                 apply("com.android.library")
                 apply("org.jetbrains.kotlin.android")
                 apply("com.google.devtools.ksp")
+                apply("kotlin-parcelize")
                 apply("beylearn.hilt")
             }
 
@@ -36,11 +36,14 @@ class BeylearnCoreConventionPlugin : Plugin<Project> {
 
                 compileSdk = 36
                 defaultConfig {
-                    minSdk = 24
+                    minSdk = 26
                     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
                     consumerProguardFiles("consumer-rules.pro")
                 }
                 buildFeatures {
+                    buildFeatures {
+                        buildConfig = true
+                    }
                     compose = moduleSuffix == "core-ui"
                 }
 
@@ -55,38 +58,56 @@ class BeylearnCoreConventionPlugin : Plugin<Project> {
                 }
 
                 compileOptions {
-                    sourceCompatibility = org.gradle.api.JavaVersion.VERSION_17
-                    targetCompatibility = org.gradle.api.JavaVersion.VERSION_17
+                    sourceCompatibility = org.gradle.api.JavaVersion.VERSION_21
+                    targetCompatibility = org.gradle.api.JavaVersion.VERSION_21
                 }
             }
 
             dependencies {
-                libs.findBundle(CORE_IMPLEMENTATION).ifPresent {
-                    "implementation"(it)
-                }
                 libs.findBundle(TEST_IMPLEMENTATION).ifPresent {
                     "implementation"(it)
                 }
 
-                if (moduleSuffix == "core.ui") {
-                    add("implementation", project(":core-entity"))
+                when (moduleSuffix) {
+                    "core.ui" -> {
+                        add("implementation", project(":core-entity"))
 
-                    val bom = libs.findLibrary("androidx-compose-bom").get()
+                        val bom = libs.findLibrary("androidx-compose-bom").get()
 
-                    // BOM Platform
-                    add("implementation", platform(bom))
-                    add("androidTestImplementation", platform(bom))
+                        // BOM Platform
+                        add("implementation", platform(bom))
+                        add("androidTestImplementation", platform(bom))
 
-                    // Core Dependencies
-                    add("implementation", libs.findLibrary("androidx-ui").get())
-                    add("implementation", libs.findLibrary("androidx-ui-graphics").get())
-                    add("implementation", libs.findLibrary("androidx-ui-tooling-preview").get())
-                    add("implementation", libs.findLibrary("androidx-material3").get())
+                        // Core Dependencies
+                        add("implementation", libs.findLibrary("androidx-ui").get())
+                        add("implementation", libs.findLibrary("androidx-ui-graphics").get())
+                        add("implementation", libs.findLibrary("androidx-ui-tooling-preview").get())
+                        add("implementation", libs.findLibrary("androidx-material3").get())
 
-                    // Debug & Testing
-                    add("debugImplementation", libs.findLibrary("androidx-ui-tooling").get())
-                    add("debugImplementation", libs.findLibrary("androidx-ui-test-junit4").get())
-                    add("debugImplementation", libs.findLibrary("androidx-ui-test-manifest").get())
+                        // Debug & Testing
+                        add("debugImplementation", libs.findLibrary("androidx-ui-tooling").get())
+                        add(
+                            "debugImplementation",
+                            libs.findLibrary("androidx-ui-test-junit4").get()
+                        )
+                        add(
+                            "debugImplementation",
+                            libs.findLibrary("androidx-ui-test-manifest").get()
+                        )
+                    }
+
+                    "core" -> {
+                        add("implementation", libs.findLibrary("timber").get())
+                        add(
+                            "implementation",
+                            libs.findLibrary("androidx-lifecycle-runtime-ktx").get()
+                        )
+                        add("implementation", libs.findLibrary("gson").get())
+                        add("implementation", libs.findLibrary("retrofit").get())
+                        add("implementation", libs.findLibrary("retrofitGson").get())
+                        add("implementation", libs.findLibrary("okhttp").get())
+                        add("implementation", libs.findLibrary("okhttpLogging").get())
+                    }
                 }
             }
         }

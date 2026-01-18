@@ -41,8 +41,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.ibeybeh.beylearn.feature_test.screen.TestScreen
 import com.ibeybeh.beylearn.ui.theme.BeyLearnTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,7 +53,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             BeyLearnTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    TracingLetterScreen()
+//                    TracingLetterScreen()
+                    TestScreen()
                 }
             }
         }
