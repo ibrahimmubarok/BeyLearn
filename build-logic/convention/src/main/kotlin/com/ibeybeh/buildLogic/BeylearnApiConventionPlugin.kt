@@ -28,7 +28,7 @@ class BeylearnApiConventionPlugin : Plugin<Project> {
 
             extensions.configure<LibraryExtension> {
                 val moduleSuffix = path.removePrefix(":")
-                    .replace("-", ".")
+                    .replace("-", "_")
                     .replace(":", ".")
 
                 namespace = "$baseNamespace.$moduleSuffix"

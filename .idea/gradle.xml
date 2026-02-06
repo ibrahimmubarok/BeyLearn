@@ -28,8 +28,11 @@
             <option value="$PROJECT_DIR$/build-logic/convention" />
             <option value="$PROJECT_DIR$/core" />
             <option value="$PROJECT_DIR$/core-entity" />
+            <option value="$PROJECT_DIR$/core-navigation" />
             <option value="$PROJECT_DIR$/core-ui" />
+            <option value="$PROJECT_DIR$/feature-login" />
             <option value="$PROJECT_DIR$/feature-test" />
+            <option value="$PROJECT_DIR$/navigation-processor" />
           </set>
         </option>
       </GradleProjectSettings>

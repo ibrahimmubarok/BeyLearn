@@ -25,11 +25,12 @@ class BeylearnFeatureConventionPlugin : Plugin<Project> {
                 apply("com.google.devtools.ksp")
                 apply("org.jetbrains.kotlin.plugin.compose")
                 apply("beylearn.hilt")
+//                apply("org.jetbrains.kotlin.plugin.serialization")
             }
 
             extensions.configure<LibraryExtension> {
                 val moduleSuffix = path.removePrefix(":")
-                    .replace("-", ".")
+                    .replace("-", "_")
                     .replace(":", ".")
 
                 namespace = "$baseNamespace.$moduleSuffix"
@@ -70,6 +71,8 @@ class BeylearnFeatureConventionPlugin : Plugin<Project> {
                 add("implementation", project(":core"))
                 add("implementation", project(":core-entity"))
                 add("implementation", project(":core-ui"))
+                add("implementation", project(":core-navigation"))
+                add("ksp", project(":navigation-processor"))
             }
         }
     }

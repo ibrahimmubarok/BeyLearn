@@ -22,6 +22,12 @@ class BeylearnCoreConventionPlugin : Plugin<Project> {
             with(pluginManager) {
                 apply("com.android.library")
                 apply("org.jetbrains.kotlin.android")
+                if (path in listOf(":core-ui", ":core-navigation")) {
+                    apply("org.jetbrains.kotlin.plugin.compose")
+                }
+                if (path in listOf(":core-entity", ":core-navigation")) {
+                    apply("org.jetbrains.kotlin.plugin.serialization")
+                }
                 apply("com.google.devtools.ksp")
                 apply("kotlin-parcelize")
                 apply("beylearn.hilt")
@@ -29,7 +35,7 @@ class BeylearnCoreConventionPlugin : Plugin<Project> {
 
             extensions.configure<LibraryExtension> {
                 moduleSuffix = path.removePrefix(":")
-                    .replace("-", ".")
+                    .replace("-", "_")
                     .replace(":", ".")
 
                 namespace = "$baseNamespace.$moduleSuffix"
@@ -42,7 +48,7 @@ class BeylearnCoreConventionPlugin : Plugin<Project> {
                 }
                 buildFeatures {
                     buildConfig = true
-                    compose = moduleSuffix == "core-ui"
+                    compose = moduleSuffix == "core_ui"
                 }
 
                 buildTypes {
@@ -67,7 +73,7 @@ class BeylearnCoreConventionPlugin : Plugin<Project> {
                 }
 
                 when (moduleSuffix) {
-                    "core.ui" -> {
+                    "core_ui" -> {
                         add("implementation", project(":core-entity"))
 
                         val bom = libs.findLibrary("androidx-compose-bom").get()
@@ -92,6 +98,16 @@ class BeylearnCoreConventionPlugin : Plugin<Project> {
                             "debugImplementation",
                             libs.findLibrary("androidx-ui-test-manifest").get()
                         )
+                    }
+
+                    "core_navigation" -> {
+                        add("implementation", project(":core-entity"))
+                        add("implementation", libs.findLibrary("compose-navigation").get())
+                        add("implementation", libs.findLibrary("kotlinx-serialization").get())
+                    }
+
+                    "core_entity" -> {
+                        add("implementation", libs.findLibrary("kotlinx-serialization").get())
                     }
 
                     "core" -> {

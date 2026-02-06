@@ -15,12 +15,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.ibeybeh.beylearn.core_navigation.annotation.BeyDestination
+import com.ibeybeh.beylearn.core_navigation.navigator.NavigationManager
+import com.ibeybeh.beylearn.core_navigation.routes.DetailProfile
+import com.ibeybeh.beylearn.core_navigation.routes.HomeNavGraph
+import com.ibeybeh.beylearn.core_navigation.routes.HomeRoute
 import com.ibeybeh.beylearn.feature_test.contract.ProfileEffect
 import com.ibeybeh.beylearn.feature_test.contract.ProfileEvent
-import com.ibeybeh.beylearn.feature_test.viewmodel.ProfileTestViewModel
+import com.ibeybeh.beylearn.feature_test.viewmodel.HomeViewModel
 
+@BeyDestination(
+    route = HomeRoute::class,
+    parentGraph = HomeNavGraph::class,
+    isStartDestination = true
+)
 @Composable
-fun TestScreen(viewModel: ProfileTestViewModel = hiltViewModel()) {
+fun HomeScreen(
+    viewModel: HomeViewModel = hiltViewModel(),
+    navigationManager: NavigationManager
+) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
     val context = LocalContext.current
@@ -32,8 +45,10 @@ fun TestScreen(viewModel: ProfileTestViewModel = hiltViewModel()) {
                     Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()
                 }
 
-                is ProfileEffect.NavigateToLogin -> {
-                    Toast.makeText(context, "Navigation To Login!", Toast.LENGTH_SHORT).show()
+                is ProfileEffect.NavigateToDetailProfile -> {
+                    state.profile?.let { navigationManager.navigateTo(DetailProfile(profile = it.name)) }
+                        ?: Toast.makeText(context, "Profile is null value", Toast.LENGTH_SHORT)
+                            .show()
                 }
             }
         }
@@ -53,8 +68,8 @@ fun TestScreen(viewModel: ProfileTestViewModel = hiltViewModel()) {
                 content = { Text("Refresh") }
             )
             Button(
-                onClick = { viewModel.onEvent(ProfileEvent.NavigateToLogin) },
-                content = { Text("Go To Login") }
+                onClick = { viewModel.onEvent(ProfileEvent.NavigateToDetailProfile) },
+                content = { Text("Go To Detail Profile Button") }
             )
         }
     }

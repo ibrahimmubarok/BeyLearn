@@ -9,7 +9,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class ProfileTestViewModel @Inject constructor(
+class HomeViewModel @Inject constructor(
     private val getProfileUseCase: GetProfileTestUseCase
 ) : BaseViewModel<ProfileState, ProfileEvent, ProfileEffect>(ProfileState()) {
 
@@ -21,7 +21,7 @@ class ProfileTestViewModel @Inject constructor(
         when (event) {
             is ProfileEvent.LoadProfile -> getProfile()
             is ProfileEvent.RefreshProfile -> getProfile()
-            is ProfileEvent.NavigateToLogin -> setEffect { ProfileEffect.NavigateToLogin }
+            is ProfileEvent.NavigateToDetailProfile -> setEffect { ProfileEffect.NavigateToDetailProfile }
         }
     }
 

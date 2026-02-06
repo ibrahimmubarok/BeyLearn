@@ -24,8 +24,11 @@ ksp = "2.1.10-1.0.31"
 projectApplicationId = "com.ibeybeh.beylearn"
 material = "1.13.0"
 uiAndroid = "1.10.0"
+kotlinPoet = "2.1.0"
+composeNavigation = "2.9.0"
 
 [libraries]
+compose-navigation = { group = "androidx.navigation", name = "navigation-compose", version.ref = "composeNavigation" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
@@ -52,6 +55,9 @@ okhttpLogging = { group = "com.squareup.okhttp3", name = "logging-interceptor", 
 chucker = { group = "com.github.chuckerteam.chucker", name = "library", version.ref = "chucker" }
 chuckerNoop = { group = "com.github.chuckerteam.chucker", name = "library-no-op", version.ref = "chucker" }
 gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
+ksp-api = { module = "com.google.devtools.ksp:symbol-processing-api", version.ref = "ksp" }
+kotlinPoet = { module = "com.squareup:kotlinpoet", version.ref = "kotlinPoet" }
+kotlinPoet-ksp = { module = "com.squareup:kotlinpoet-ksp", version.ref = "kotlinPoet" }
 
 ## Dependencies for build-convention
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
@@ -111,6 +117,7 @@ feature-implementation = [
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 kspPlugin = { id = "com.google.devtools.ksp", version.ref = "ksp" }

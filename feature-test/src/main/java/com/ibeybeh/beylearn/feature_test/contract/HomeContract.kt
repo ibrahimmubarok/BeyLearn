@@ -14,10 +14,10 @@ data class ProfileState(
 sealed class ProfileEvent : UiEvent {
     object LoadProfile : ProfileEvent()
     data class RefreshProfile(val forceUpdate: Boolean) : ProfileEvent()
-    object NavigateToLogin : ProfileEvent()
+    object NavigateToDetailProfile : ProfileEvent()
 }
 
 sealed class ProfileEffect : UiEffect {
     data class ShowToast(val message: String) : ProfileEffect()
-    object NavigateToLogin : ProfileEffect()
+    object NavigateToDetailProfile : ProfileEffect()
 }

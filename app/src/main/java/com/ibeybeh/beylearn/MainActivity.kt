@@ -41,23 +41,57 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ibeybeh.beylearn.feature_test.screen.TestScreen
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.rememberNavController
+import com.ibeybeh.beylearn.core_navigation.navigator.NavigationEffects
+import com.ibeybeh.beylearn.core_navigation.navigator.NavigationManager
+import com.ibeybeh.beylearn.core_navigation.routes.HomeNavGraph
+import com.ibeybeh.beylearn.core_navigation.routes.homeNavGraph
+import com.ibeybeh.beylearn.core_navigation.routes.loginNavGraph
 import com.ibeybeh.beylearn.ui.theme.BeyLearnTheme
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    @Inject
+    lateinit var navigationManager: NavigationManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             BeyLearnTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                Scaffold(modifier = Modifier.fillMaxSize()) { _ ->
 //                    TracingLetterScreen()
-                    TestScreen()
+
+                    val navController = rememberNavController()
+
+                    NavigationEffects(navigationManager, navController)
+
+                    AppNavigation(
+                        navController = navController,
+                        navigationManager = navigationManager
+                    )
                 }
             }
         }
+    }
+}
+
+@Composable
+fun AppNavigation(
+    navController: NavHostController,
+    navigationManager: NavigationManager
+) {
+    NavHost(
+        navController = navController,
+        startDestination = HomeNavGraph::class
+    ) {
+        homeNavGraph(navigationManager)
+        loginNavGraph(navigationManager)
     }
 }
 
