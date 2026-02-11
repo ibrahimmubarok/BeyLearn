@@ -6,7 +6,6 @@ import com.ibeybeh.beylearn.core.remote.entity.ApiResult
 import com.ibeybeh.beylearn.core.remote.entity.BaseErrorResponse
 import com.ibeybeh.beylearn.core.util.UiEffect
 import com.ibeybeh.beylearn.core.util.UiEvent
-import com.ibeybeh.beylearn.core.util.UiState
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,7 +15,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-abstract class BaseViewModel<State : UiState, Event : UiEvent, Effect : UiEffect>(
+abstract class BaseViewModel<State : Any, Event : UiEvent, Effect : UiEffect>(
     initialState: State
 ) : ViewModel() {
 

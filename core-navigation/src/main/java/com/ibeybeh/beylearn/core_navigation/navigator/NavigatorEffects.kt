@@ -35,10 +35,12 @@ fun NavigationEffects(
                 is NavigationCommand.NavigateAndClearBackStack -> {
                     navController.navigate(command.route) {
                         // Pop up to start atau route tertentu
-                        popUpTo(command.popUpToRoute ?: 0) {
-                            inclusive = true
+                        popUpTo(navController.graph.id) {
+                            saveState = false
+                            inclusive = false
                         }
                         launchSingleTop = true
+                        restoreState = false
                     }
                 }
 

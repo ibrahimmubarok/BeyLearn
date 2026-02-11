@@ -23,7 +23,6 @@ class BeylearnApiConventionPlugin : Plugin<Project> {
                 apply("com.android.library")
                 apply("org.jetbrains.kotlin.android")
                 apply("com.google.devtools.ksp")
-                apply("beylearn.hilt")
             }
 
             extensions.configure<LibraryExtension> {

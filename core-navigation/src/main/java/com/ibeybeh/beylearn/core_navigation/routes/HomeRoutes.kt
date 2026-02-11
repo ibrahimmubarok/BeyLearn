@@ -9,4 +9,4 @@ object HomeNavGraph
 object HomeRoute
 
 @Serializable
-data class DetailProfile(val profile: String)
+data class DetailProfile(val profile: String = "")
