@@ -23,9 +23,6 @@ class BeylearnFeatureConventionPlugin : Plugin<Project> {
                 apply("com.android.library")
                 apply("org.jetbrains.kotlin.android")
                 apply("com.google.devtools.ksp")
-                apply("org.jetbrains.kotlin.plugin.compose")
-                apply("beylearn.hilt")
-//                apply("org.jetbrains.kotlin.plugin.serialization")
             }
 
             extensions.configure<LibraryExtension> {
@@ -62,12 +59,6 @@ class BeylearnFeatureConventionPlugin : Plugin<Project> {
             }
 
             dependencies {
-                libs.findBundle(FEATURE_IMPLEMENTATION).ifPresent {
-                    "implementation"(it)
-                }
-                libs.findBundle(ANDROID_TEST_IMPLEMENTATION).ifPresent {
-                    "implementation"(it)
-                }
                 add("implementation", project(":core"))
                 add("implementation", project(":core-entity"))
                 add("implementation", project(":core-ui"))

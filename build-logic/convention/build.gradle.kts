@@ -30,5 +30,9 @@ gradlePlugin {
             id = "beylearn.hilt"
             implementationClass = "com.ibeybeh.buildlogic.BeylearnHiltConventionPlugin"
         }
+        register("androidCompose") {
+            id = "beylearn.android.compose"
+            implementationClass = "com.ibeybeh.buildlogic.BeylearnComposeConventionPlugin"
+        }
     }
 }

@@ -22,15 +22,7 @@ class BeylearnCoreConventionPlugin : Plugin<Project> {
             with(pluginManager) {
                 apply("com.android.library")
                 apply("org.jetbrains.kotlin.android")
-                if (path in listOf(":core-ui", ":core-navigation")) {
-                    apply("org.jetbrains.kotlin.plugin.compose")
-                }
-                if (path in listOf(":core-entity", ":core-navigation")) {
-                    apply("org.jetbrains.kotlin.plugin.serialization")
-                }
-                apply("com.google.devtools.ksp")
                 apply("kotlin-parcelize")
-                apply("beylearn.hilt")
             }
 
             extensions.configure<LibraryExtension> {
@@ -70,58 +62,6 @@ class BeylearnCoreConventionPlugin : Plugin<Project> {
             dependencies {
                 libs.findBundle(TEST_IMPLEMENTATION).ifPresent {
                     "implementation"(it)
-                }
-
-                when (moduleSuffix) {
-                    "core_ui" -> {
-                        add("implementation", project(":core-entity"))
-
-                        val bom = libs.findLibrary("androidx-compose-bom").get()
-
-                        // BOM Platform
-                        add("implementation", platform(bom))
-                        add("androidTestImplementation", platform(bom))
-
-                        // Core Dependencies
-                        add("implementation", libs.findLibrary("androidx-ui").get())
-                        add("implementation", libs.findLibrary("androidx-ui-graphics").get())
-                        add("implementation", libs.findLibrary("androidx-ui-tooling-preview").get())
-                        add("implementation", libs.findLibrary("androidx-material3").get())
-
-                        // Debug & Testing
-                        add("debugImplementation", libs.findLibrary("androidx-ui-tooling").get())
-                        add(
-                            "debugImplementation",
-                            libs.findLibrary("androidx-ui-test-junit4").get()
-                        )
-                        add(
-                            "debugImplementation",
-                            libs.findLibrary("androidx-ui-test-manifest").get()
-                        )
-                    }
-
-                    "core_navigation" -> {
-                        add("implementation", project(":core-entity"))
-                        add("implementation", libs.findLibrary("compose-navigation").get())
-                        add("implementation", libs.findLibrary("kotlinx-serialization").get())
-                    }
-
-                    "core_entity" -> {
-                        add("implementation", libs.findLibrary("kotlinx-serialization").get())
-                    }
-
-                    "core" -> {
-                        add("implementation", libs.findLibrary("timber").get())
-                        add(
-                            "implementation",
-                            libs.findLibrary("androidx-lifecycle-runtime-ktx").get()
-                        )
-                        add("implementation", libs.findLibrary("gson").get())
-                        add("implementation", libs.findLibrary("retrofit").get())
-                        add("implementation", libs.findLibrary("retrofitGson").get())
-                        add("implementation", libs.findLibrary("okhttp").get())
-                        add("implementation", libs.findLibrary("okhttpLogging").get())
-                    }
                 }
             }
         }

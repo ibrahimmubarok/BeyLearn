@@ -53,28 +53,34 @@ class NetworkModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(@ApplicationContext context: Context) = OkHttpClient.Builder().apply {
-        if (BuildConfig.DEBUG) {
-            addInterceptor(
-                ChuckerInterceptor.Builder(context)
-                    .maxContentLength(MAX_VALUE.toLong())
-                    .createShortcut(false)
-                    .build()
-            )
-                .addInterceptor(HttpLoggingInterceptor().apply { HttpLoggingInterceptor.Level.BODY })
-                .addInterceptor { chain ->
+    fun provideOkHttpClient(
+        @ApplicationContext context: Context,
+        loggingInterceptor: HttpLoggingInterceptor
+    ): OkHttpClient {
+        return OkHttpClient.Builder().apply {
+            if (BuildConfig.DEBUG) {
+                addInterceptor(
+                    ChuckerInterceptor.Builder(context)
+                        .maxContentLength(MAX_VALUE.toLong())
+                        .createShortcut(false)
+                        .build()
+                )
+                addInterceptor(loggingInterceptor)
+                addInterceptor { chain ->
                     val original = chain.request()
                     val requestBuilder = original.newBuilder()
                         .header("Content-Type", "application/json")
                         .header("Accept", "application/json")
                         .method(original.method, original.body)
+
                     val request = requestBuilder.build()
                     chain.proceed(request)
                 }
-        }
+            }
 
-        connectTimeout(30, TimeUnit.SECONDS)
-        readTimeout(30, TimeUnit.SECONDS)
-        writeTimeout(30, TimeUnit.SECONDS)
-    }.build()
+            connectTimeout(30, TimeUnit.SECONDS)
+            readTimeout(30, TimeUnit.SECONDS)
+            writeTimeout(30, TimeUnit.SECONDS)
+        }.build()
+    }
 }

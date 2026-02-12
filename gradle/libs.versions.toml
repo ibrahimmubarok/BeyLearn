@@ -71,17 +71,16 @@ androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navig
 hilt-gradlePlugin = { group = "com.google.dagger", name = "hilt-android-gradle-plugin", version.ref = "hilt" }
 
 [bundles]
-android-test-implementation = ["androidx-junit", "androidx-espresso-core"]
+network-implementation = [
+    "okhttp",
+    "okhttpLogging",
+    "retrofit",
+    "retrofitGson",
+    "gson"
+]
 test-implementation = [
     "junit",
     "androidx-jUnitKtx"
-]
-core-implementation = [
-    "gson",
-    "timber",
-    "androidx-core-ktx",
-    "androidx-appCompat",
-    "androidx-lifecycle-runtime-ktx"
 ]
 api-implementation = [
     "timber",
@@ -93,25 +92,6 @@ api-implementation = [
     "retrofitGson",
     "okhttp"
 ]
-feature-implementation = [
-    "androidx-core-ktx",
-    "androidx-hilt-navigation-compose",
-    "androidx-appCompat",
-    "kotlinx-serialization",
-    "androidx-lifecycle-runtime-ktx",
-    "android-lifecycle-runtime-compose",
-    "timber",
-    "androidx-compose-bom",
-    "androidx-ui",
-    "androidx-ui-graphics",
-    "androidx-ui-tooling",
-    "androidx-ui-tooling-preview",
-    "androidx-ui-test-manifest",
-    "androidx-ui-test-junit4",
-    "androidx-material3",
-    "androidx-ui-android"
-]
-
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -125,4 +105,5 @@ beylearn-android-api = { id = "beylearn.android.api" }
 beylearn-android-core = { id = "beylearn.android.core" }
 beylearn-android-feature = { id = "beylearn.android.feature" }
 beylearn-hilt = { id = "beylearn.hilt" }
+beylearn-android-compose = { id = "beylearn.android.compose" }
 
