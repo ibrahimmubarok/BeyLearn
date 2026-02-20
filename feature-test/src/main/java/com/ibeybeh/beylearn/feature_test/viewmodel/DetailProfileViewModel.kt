@@ -1,9 +1,8 @@
 package com.ibeybeh.beylearn.feature_test.viewmodel
 
 import androidx.lifecycle.SavedStateHandle
-import androidx.navigation.toRoute
 import com.ibeybeh.beylearn.core.base.BaseViewModel
-import com.ibeybeh.beylearn.core_navigation.routes.DetailProfile
+import com.ibeybeh.beylearn.core_navigation.routes.savedStateExt.getDetailProfileRoute
 import com.ibeybeh.beylearn.feature_test.contract.DetailProfileEffect
 import com.ibeybeh.beylearn.feature_test.contract.DetailProfileEvent
 import com.ibeybeh.beylearn.feature_test.contract.DetailProfileState
@@ -16,8 +15,8 @@ class DetailProfileViewModel @Inject constructor(
 ) : BaseViewModel<DetailProfileState, DetailProfileEvent, DetailProfileEffect>(DetailProfileState()) {
 
     init {
-        val args = savedStateHandle.toRoute<DetailProfile>()
-        setState { copy(name = args.profile) }
+        val args = savedStateHandle.getDetailProfileRoute()
+        setState { copy(name = args.profile.name) }
     }
 
     override fun onEvent(event: DetailProfileEvent) {

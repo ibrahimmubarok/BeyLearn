@@ -6,9 +6,15 @@ import com.google.devtools.ksp.processing.KSPLogger
 import com.google.devtools.ksp.processing.Resolver
 import com.google.devtools.ksp.processing.SymbolProcessor
 import com.google.devtools.ksp.symbol.KSAnnotated
+import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSFunctionDeclaration
 import com.google.devtools.ksp.symbol.KSType
 import com.google.devtools.ksp.validate
+import com.ibeybeh.beylearn.navigation.processor.utils.createTypeMapCodeBlock
+import com.ibeybeh.beylearn.navigation.processor.utils.getCustomRouteParameters
+import com.ibeybeh.beylearn.navigation.processor.utils.getParentGraphType
+import com.ibeybeh.beylearn.navigation.processor.utils.getRouteKSType
+import com.ibeybeh.beylearn.navigation.processor.utils.isStartDestination
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FileSpec
@@ -24,8 +30,13 @@ class BeyNavigationProcessor(
 ) : SymbolProcessor {
 
     companion object {
+        // Sesuaikan dengan lokasi anotasi Anda
         private const val ANNOTATION_QNAME =
             "com.ibeybeh.beylearn.core_navigation.annotation.BeyDestination"
+
+        // Sesuaikan dengan package tempat Anda menyimpan inline fun typeMapOf()
+        private const val TYPE_MAP_OF_PACKAGE =
+            "com.ibeybeh.beylearn.core_navigation.util"
     }
 
     override fun process(resolver: Resolver): List<KSAnnotated> {
@@ -36,71 +47,53 @@ class BeyNavigationProcessor(
         if (!validFunctions.iterator().hasNext()) return emptyList()
 
         try {
-            // 3. GROUPING: Kelompokkan fungsi berdasarkan Parent Graph-nya
-            // Map<ClassName, List<KSFunctionDeclaration>>
+            // 1. Grouping route berdasarkan Parent Graph-nya
             val graphGroups = validFunctions.groupBy { func ->
-                val parentGraphType = getParentGraphType(func)
-                // Mengubah KSType menjadi ClassName (KotlinPoet) untuk jadi Key Map
-                parentGraphType.toClassName()
+                getParentGraphType(func).toClassName()
             }
 
-            // 4. GENERATE: Loop setiap grup dan buat filenya
             graphGroups.forEach { (graphClassName, routes) ->
-                logger.warn("Generating graph extension for: ${graphClassName.simpleName}")
+                // 2. Generate ekstensi NavGraphBuilder (Contoh: homeNavGraph)
+                generateGraphExtension(resolver, graphClassName, routes)
 
-                generateGraphExtension(
-                    resolver = resolver,
-                    graphClassName = graphClassName,
-                    routes = routes
-                )
+                // 3. Generate ekstensi SavedStateHandle untuk SETIAP route dalam graph tersebut
+                routes.forEach { routeFunc ->
+                    val routeKSType = getRouteKSType(routeFunc)
+                    generateSavedStateHandleExtension(routeKSType, routeFunc)
+                }
             }
 
         } catch (e: Exception) {
             logger.error("Error processing navigation: ${e.message}")
         }
 
-        // Return simbol yang tidak valid untuk diproses di round berikutnya
         return symbols.filterNot { it.validate() }.toList()
     }
 
+    // =========================================================================
+    // GENERATOR 1: NavGraphBuilder Extension (homeNavGraph)
+    // =========================================================================
     private fun generateGraphExtension(
         resolver: Resolver,
         graphClassName: ClassName,
         routes: List<KSFunctionDeclaration>
     ) {
-        // A. Setup Class & Member Names (Agar Import Otomatis)
         val navGraphBuilderClass = ClassName("androidx.navigation", "NavGraphBuilder")
         val navManagerClass = ClassName(
             "com.ibeybeh.beylearn.core_navigation.navigator",
             "NavigationManager"
-        ) // Sesuaikan package
+        ) // Sesuaikan dengan package NavigationManager Anda
 
         val navComposeNavigation = MemberName("androidx.navigation.compose", "navigation")
         val navComposeComposable = MemberName("androidx.navigation.compose", "composable")
+        val typeMapOfMember = MemberName(TYPE_MAP_OF_PACKAGE, "typeMapOf")
 
-        // B. Nama Fungsi: HomeNavGraph -> homeNavGraph
         val graphName = graphClassName.simpleName.replaceFirstChar { it.lowercase() }
+        val startRoute = routes.find { isStartDestination(it) } ?: routes.firstOrNull() ?: return
+        val startRouteClass = getRouteKSType(startRoute).toClassName()
 
-        val startRoute = routes.find { func -> isStartDestination(func) }
-        // Fallback: Jika tidak ada yang true, ambil route pertama dalam list
-            ?: routes.firstOrNull()
-            ?: return
-
-        val startRouteClass = getRouteType(startRoute)
-
-//        // C. Cari Start Destination
-//        // Logika: Cari yang punya anotasi @StartDestination, atau ambil yang pertama
-//        val startRoute = routes.find { func ->
-//            // Sesuaikan nama anotasi StartDestination Anda jika ada
-//            func.annotations.any { it.shortName.asString() == "isStartDestination" }
-//        } ?: routes.firstOrNull()
-//        ?: return
-//
-//        val startRouteClass = getRouteType(startRoute)
-
-        // D. Buat Code Block
         val codeBlock = CodeBlock.builder().apply {
-            // navigation<Graph>(startDestination = ...)
+            // navigation<HomeNavGraph>(startDestination = HomeRoute::class)
             beginControlFlow(
                 "%M<%T>(startDestination = %T::class)",
                 navComposeNavigation,
@@ -109,36 +102,43 @@ class BeyNavigationProcessor(
             )
 
             routes.forEach { func ->
-                val routeType = getRouteType(func)
+                val routeKSType = getRouteKSType(func)
+                val routeClass = routeKSType.toClassName()
                 val screenFunction =
                     MemberName(func.packageName.asString(), func.simpleName.asString())
 
-                // composable<Route> {
-                beginControlFlow("%M<%T>", navComposeComposable, routeType)
+                // Inspeksi apakah argumen route punya custom class (seperti Profile)
+                val customParams = getCustomRouteParameters(routeKSType)
 
-                // Screen(navigationManager = navigationManager)
+                // Buat blok `typeMap = mapOf(...)`
+                val typeMapBlock = createTypeMapCodeBlock(customParams, typeMapOfMember)
+
+                // Render composable dengan atau tanpa typeMap
+                if (typeMapBlock == null) {
+                    beginControlFlow("%M<%T>", navComposeComposable, routeClass)
+                } else {
+                    beginControlFlow("%M<%T>(%L)", navComposeComposable, routeClass, typeMapBlock)
+                }
+
+                // Panggil Screen: DetailProfileScreen(navigationManager = navigationManager)
                 addStatement("%M(navigationManager = navigationManager)", screenFunction)
-
                 endControlFlow()
             }
             endControlFlow()
         }.build()
 
-        // E. Buat Fungsi Extension
         val functionSpec = FunSpec.builder(graphName)
             .addModifiers(KModifier.PUBLIC)
-            .receiver(navGraphBuilderClass) // Extension fun NavGraphBuilder.nama()
+            .receiver(navGraphBuilderClass)
             .addParameter("navigationManager", navManagerClass)
             .addCode(codeBlock)
             .build()
 
-        // F. Buat File
         val fileSpec =
             FileSpec.builder(graphClassName.packageName, "${graphClassName.simpleName}Ext")
                 .addFunction(functionSpec)
                 .build()
 
-        // G. Tulis File (Menggunakan mapNotNull agar aman dari !!)
         val dependencies = Dependencies(
             aggregating = true,
             sources = routes.mapNotNull { it.containingFile }.toTypedArray()
@@ -147,52 +147,66 @@ class BeyNavigationProcessor(
         fileSpec.writeTo(codeGenerator, dependencies)
     }
 
-    // --- HELPER 1: Mengambil Tipe Parent Graph dari Anotasi ---
-    private fun getParentGraphType(func: KSFunctionDeclaration): KSType {
-        val annotation = func.annotations.find { it.shortName.asString() == "BeyDestination" }!!
+    // =========================================================================
+    // GENERATOR 2: SavedStateHandle Extension (getDetailProfileNavArgs)
+    // =========================================================================
+    private fun generateSavedStateHandleExtension(
+        routeKSType: KSType,
+        routeFunc: KSFunctionDeclaration
+    ) {
+        // 1. Ambil deklarasi kelas dari routeKSType
+        val classDeclaration = routeKSType.declaration as? KSClassDeclaration
 
-        // Cari argumen 'parentGraph' (bisa via nama atau posisi)
-        val arg = annotation.arguments.find { it.name?.asString() == "parentGraph" }
-            ?: annotation.arguments.getOrNull(1) // Fallback ke index 1 jika positional
+        // 2. Cek apakah constructor utama memiliki parameter
+        val hasParameters = classDeclaration?.primaryConstructor?.parameters?.isNotEmpty() == true
 
-        return arg?.value as? KSType
-            ?: throw IllegalStateException("parentGraph tidak ditemukan di ${func.simpleName.asString()}")
-    }
+        // 3. Jika tidak ada parameter, hentikan fungsi di sini (jangan buat file)
+        if (!hasParameters) {
+            return
+        }
 
-    // --- HELPER 2: Mengambil Tipe Route dari Anotasi ---
-    // Digunakan di dalam generateGraphExtension
-    private fun getRouteType(func: KSFunctionDeclaration): ClassName {
-        val annotation = func.annotations.find { it.shortName.asString() == "BeyDestination" }!!
+        // --- KODE LAMA KAMU TETAP BERJALAN DI BAWAH SINI ---
+        val routeClass = routeKSType.toClassName()
+        val customParams = getCustomRouteParameters(routeKSType)
 
-        // Cari argumen 'route' (biasanya index 0)
-        val arg = annotation.arguments.find { it.name?.asString() == "route" }
-            ?: annotation.arguments.getOrNull(0) // Fallback index 0
+        val savedStateHandleClass = ClassName("androidx.lifecycle", "SavedStateHandle")
+        val toRouteMember = MemberName("androidx.navigation", "toRoute")
+        val typeMapOfMember = MemberName(TYPE_MAP_OF_PACKAGE, "typeMapOf")
 
-        val type = arg?.value as? KSType
-            ?: throw IllegalStateException("Route class tidak ditemukan di ${func.simpleName.asString()}")
+        val extensionName = "get${routeClass.simpleName}"
 
-        return type.toClassName()
-    }
+        val typeMapBlock = createTypeMapCodeBlock(customParams, typeMapOfMember)
 
-    private fun isStartDestination(func: KSFunctionDeclaration): Boolean {
-        val annotation = func.annotations.find { it.shortName.asString() == "BeyDestination" }
-            ?: return false
+        val funSpecBuilder = FunSpec.builder(extensionName)
+            .addModifiers(KModifier.INTERNAL)
+            .receiver(savedStateHandleClass)
+            .returns(routeClass)
 
-        // 1. Cari argumen berdasarkan nama "isStartDestination"
-        val arg = annotation.arguments.find { it.name?.asString() == "isStartDestination" }
+        if (typeMapBlock == null) {
+            funSpecBuilder.addStatement("return %M<%T>()", toRouteMember, routeClass)
+        } else {
+            funSpecBuilder.addStatement(
+                "return %M<%T>(%L)",
+                toRouteMember,
+                routeClass,
+                typeMapBlock
+            )
+        }
 
-        // 2. Jika tidak ketemu nama, coba cek berdasarkan posisi (index ke-2)
-        // Urutan: [0] route, [1] parentGraph, [2] isStartDestination
-        val value = arg?.value ?: annotation.arguments.getOrNull(2)?.value
+        // Pastikan package namenya sudah menggunakan .savedstatehandle seperti yang kita diskusikan sebelumnya
+        val targetPackage = "${routeClass.packageName}.savedStateExt"
 
-        // 3. Kembalikan nilai boolean (default false jika null/tidak di-set user)
-        return value as? Boolean ?: false
-    }
+        val fileSpec = FileSpec.builder(targetPackage, "${routeClass.simpleName}SavedStateExt")
+            .addFunction(funSpecBuilder.build())
+            .build()
 
-    // Helper untuk mengambil KClass dari Annotation di KSP
-    private fun getKClassType(func: KSFunctionDeclaration, paramName: String): KSType {
-        val annotation = func.annotations.first { it.shortName.asString() == "BeyDestination" }
-        val arg = annotation.arguments.first { it.name?.asString() == paramName }
-        return arg.value as KSType
+        val fileSource = routeFunc.containingFile
+        val dependencies = if (fileSource != null) {
+            Dependencies(aggregating = true, fileSource)
+        } else {
+            Dependencies(aggregating = true)
+        }
+
+        fileSpec.writeTo(codeGenerator, dependencies)
     }
 }

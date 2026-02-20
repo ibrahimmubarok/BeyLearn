@@ -17,7 +17,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ibeybeh.beylearn.core_navigation.annotation.BeyDestination
 import com.ibeybeh.beylearn.core_navigation.navigator.NavigationManager
-import com.ibeybeh.beylearn.core_navigation.routes.DetailProfile
+import com.ibeybeh.beylearn.core_navigation.routes.DetailProfileRoute
 import com.ibeybeh.beylearn.core_navigation.routes.HomeNavGraph
 import com.ibeybeh.beylearn.core_navigation.routes.HomeRoute
 import com.ibeybeh.beylearn.feature_test.contract.ProfileEffect
@@ -46,9 +46,10 @@ fun HomeScreen(
                 }
 
                 is ProfileEffect.NavigateToDetailProfile -> {
-                    state.profile?.let { navigationManager.navigateTo(DetailProfile(profile = it.name)) }
-                        ?: Toast.makeText(context, "Profile is null value", Toast.LENGTH_SHORT)
-                            .show()
+                    state.profile?.let { profile ->
+                        navigationManager.navigateTo(DetailProfileRoute(profile))
+                    } ?: Toast.makeText(context, "Profile is null value", Toast.LENGTH_SHORT)
+                        .show()
                 }
             }
         }

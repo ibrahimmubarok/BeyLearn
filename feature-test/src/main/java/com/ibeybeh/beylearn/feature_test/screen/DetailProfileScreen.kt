@@ -17,7 +17,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ibeybeh.beylearn.core_navigation.annotation.BeyDestination
 import com.ibeybeh.beylearn.core_navigation.navigator.NavigationManager
-import com.ibeybeh.beylearn.core_navigation.routes.DetailProfile
+import com.ibeybeh.beylearn.core_navigation.routes.DetailProfileRoute
 import com.ibeybeh.beylearn.core_navigation.routes.HomeNavGraph
 import com.ibeybeh.beylearn.core_navigation.routes.LoginRoute
 import com.ibeybeh.beylearn.feature_test.contract.DetailProfileEffect
@@ -25,7 +25,7 @@ import com.ibeybeh.beylearn.feature_test.contract.DetailProfileEvent
 import com.ibeybeh.beylearn.feature_test.viewmodel.DetailProfileViewModel
 
 @BeyDestination(
-    route = DetailProfile::class,
+    route = DetailProfileRoute::class,
     parentGraph = HomeNavGraph::class
 )
 @Composable
@@ -58,7 +58,7 @@ fun DetailProfileScreen(
         Text("Welcome ${state.name}")
         Spacer(Modifier.size(6.dp))
         Button(
-            content = { Text("Back to login") },
+            content = { Text("Go to login") },
             onClick = { viewModel.onEvent(DetailProfileEvent.NavigateToLogin) }
         )
         Button(

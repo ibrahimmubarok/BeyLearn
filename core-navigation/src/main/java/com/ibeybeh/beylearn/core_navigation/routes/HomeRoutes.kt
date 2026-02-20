@@ -1,5 +1,6 @@
 package com.ibeybeh.beylearn.core_navigation.routes
 
+import com.ibeybeh.beylearn.core_entity.Profile
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -9,4 +10,4 @@ object HomeNavGraph
 object HomeRoute
 
 @Serializable
-data class DetailProfile(val profile: String = "")
+data class DetailProfileRoute(val profile: Profile = Profile())

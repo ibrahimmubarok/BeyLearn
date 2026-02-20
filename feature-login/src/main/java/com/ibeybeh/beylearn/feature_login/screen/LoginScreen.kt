@@ -12,7 +12,6 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ibeybeh.beylearn.core_navigation.annotation.BeyDestination
 import com.ibeybeh.beylearn.core_navigation.navigator.NavigationManager
-import com.ibeybeh.beylearn.core_navigation.routes.DetailProfile
 import com.ibeybeh.beylearn.core_navigation.routes.HomeRoute
 import com.ibeybeh.beylearn.core_navigation.routes.LoginNavGraph
 import com.ibeybeh.beylearn.core_navigation.routes.LoginRoute
