@@ -1,7 +1,7 @@
 package com.ibeybeh.beylearn.feature_test.contract
 
-import com.ibeybeh.beylearn.core.util.UiEffect
-import com.ibeybeh.beylearn.core.util.UiEvent
+import com.ibeybeh.beylearn.core.utils.UiEffect
+import com.ibeybeh.beylearn.core.utils.UiEvent
 
 data class DetailProfileState(
     val name: String = ""

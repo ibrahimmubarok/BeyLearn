@@ -1,4 +1,4 @@
-package com.ibeybeh.beylearn.core.util
+package com.ibeybeh.beylearn.core.utils.strings
 
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter

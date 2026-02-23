@@ -49,7 +49,7 @@ import com.ibeybeh.beylearn.core_navigation.navigator.NavigationManager
 import com.ibeybeh.beylearn.core_navigation.routes.HomeNavGraph
 import com.ibeybeh.beylearn.core_navigation.routes.homeNavGraph
 import com.ibeybeh.beylearn.core_navigation.routes.loginNavGraph
-import com.ibeybeh.beylearn.ui.theme.BeyLearnTheme
+import com.ibeybeh.beylearn.core_ui.theme.BeyLearnTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -64,7 +64,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             BeyLearnTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { _ ->
+                Scaffold(modifier = Modifier.fillMaxSize()) { padding ->
 //                    TracingLetterScreen()
 
                     val navController = rememberNavController()
@@ -72,6 +72,7 @@ class MainActivity : ComponentActivity() {
                     NavigationEffects(navigationManager, navController)
 
                     AppNavigation(
+                        modifier = Modifier.padding(padding),
                         navController = navController,
                         navigationManager = navigationManager
                     )
@@ -83,10 +84,12 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun AppNavigation(
+    modifier: Modifier,
     navController: NavHostController,
     navigationManager: NavigationManager
 ) {
     NavHost(
+        modifier = modifier,
         navController = navController,
         startDestination = HomeNavGraph::class
     ) {

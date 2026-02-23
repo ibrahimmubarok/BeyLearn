@@ -1,4 +1,4 @@
-package com.ibeybeh.beylearn.core.util
+package com.ibeybeh.beylearn.core.utils.network
 
 object HttpErrorCode {
     const val NO_CONTENT = 204

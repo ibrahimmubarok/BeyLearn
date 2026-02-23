@@ -1,4 +1,4 @@
-package com.ibeybeh.beylearn.core.util
+package com.ibeybeh.beylearn.core.utils.network
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder

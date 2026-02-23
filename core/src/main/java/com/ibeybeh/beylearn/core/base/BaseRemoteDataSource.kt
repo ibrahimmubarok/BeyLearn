@@ -3,8 +3,8 @@ package com.ibeybeh.beylearn.core.base
 import com.ibeybeh.beylearn.core.remote.entity.ApiResult
 import com.ibeybeh.beylearn.core.remote.entity.BaseErrorResponse
 import com.ibeybeh.beylearn.core.remote.entity.BaseResponse
-import com.ibeybeh.beylearn.core.util.HttpErrorCode
-import com.ibeybeh.beylearn.core.util.JsonUtil.fromJson
+import com.ibeybeh.beylearn.core.utils.network.HttpErrorCode
+import com.ibeybeh.beylearn.core.utils.network.JsonUtil.fromJson
 import okhttp3.ResponseBody
 import retrofit2.Response
 import java.io.IOException

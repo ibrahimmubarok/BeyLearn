@@ -1,4 +1,4 @@
-package com.ibeybeh.beylearn.core_ui
+package com.ibeybeh.beylearn.core_ui.component
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
